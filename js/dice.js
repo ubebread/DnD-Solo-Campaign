@@ -2,6 +2,10 @@ const Dice = {
   roll(sides) {
     return 1 + Math.floor(Math.random() * sides);
   },
+  fourD6DropLowest() {
+    const parts = [this.roll(6), this.roll(6), this.roll(6), this.roll(6)].sort((a, b) => a - b);
+    return { total: parts[1] + parts[2] + parts[3], parts };
+  },
   parse(expr, mods = {}) {
     const raw = String(expr).toUpperCase();
     const m = raw.match(/(\d+)d(\d+)([+-]\w+)?/i);
@@ -12,7 +16,7 @@ const Dice = {
     let label = `${n}d${s}`;
     if (m[3]) {
       const key = m[3].slice(1).toLowerCase();
-      if (["str", "dex", "cha", "int"].includes(key)) {
+      if (ABILS.includes(key)) {
         bonus = mods[key] || 0;
         label += (bonus >= 0 ? "+" : "") + bonus;
       } else {
