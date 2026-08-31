@@ -38,11 +38,13 @@ Keys live only in this browser's localStorage. If a host blocks browser calls (C
 ```
 index.html
 styles.css
-js/data.js         races, classes, world tables, 5e arrays
-js/dice.js         roller and check math
-js/engine.js       worldwright, action parser, combat, multi-slot saves
-js/llm.js          optional hosted narrator
-js/ui.js           screens
+js/data.js           races, classes, world tables, 5e arrays
+js/dice.js           roller and check math
+js/engine.js         settings, multi-slot saves, 5e helpers
+js/engine-rest-a.js  character, world, combat
+js/engine-rest-b.js  leveling, travel, actions, Engine export
+js/llm.js            optional hosted narrator
+js/ui.js             screens (slots, 6 abilities, DM settings)
 ```
 
 ## License
