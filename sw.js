@@ -1,5 +1,5 @@
-const CACHE = "ashen-way-v1";
-const ASSETS = ["./", "index.html", "styles.css", "js/data.js", "js/dice.js", "js/engine.js", "js/ui.js", "manifest.json", "icon.svg"];
+const CACHE = "ashen-way-v2";
+const ASSETS = ["./", "index.html", "styles.css", "js/data.js", "js/dice.js", "js/engine.js", "js/llm.js", "js/ui.js", "manifest.json", "icon.svg"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
