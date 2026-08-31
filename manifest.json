@@ -1,0 +1,17 @@
+{
+  "name": "Ashen Way — Solo DnD Campaign",
+  "short_name": "Ashen Way",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#140c08",
+  "theme_color": "#140c08",
+  "description": "A single AI-driven Dungeons & Dragons campaign for desktop and mobile.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
