@@ -1,42 +1,48 @@
+const ABILS = ["str", "dex", "con", "int", "wis", "cha"];
+const ABIL_LABEL = { str: "Strength", dex: "Dexterity", con: "Constitution", int: "Intelligence", wis: "Wisdom", cha: "Charisma" };
+const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
+const POINT_BUY_COST = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 };
+const POINT_BUY_BUDGET = 27;
+
 const RACES = {
   human: {
     id: "human",
     name: "Human",
-    blurb: "Versatile and ambitious. Bonus skill, an extra feat, balanced stat boosts.",
+    blurb: "Versatile and ambitious. +1 to every ability, extra feat, bonus skill.",
     traits: ["Bonus Skill Proficiency", "Extra Feat: Skilled", "Adaptable"],
-    bonuses: { str: 1, dex: 1, cha: 1, int: 1, hp: 1 },
+    bonuses: { str: 1, dex: 1, con: 1, int: 1, wis: 1, cha: 1 },
     features: "You pick up languages, tools, and customs quickly. Once per rest you may reroll a failed skill check."
   },
   elf: {
     id: "elf",
     name: "Elf",
-    blurb: "Graceful and long-lived. Darkvision, charm resistance, Trance instead of sleep.",
+    blurb: "Graceful and long-lived. +2 Dexterity, +1 Intelligence. Darkvision, Fey Ancestry, Trance.",
     traits: ["Darkvision", "Fey Ancestry", "Trance"],
-    bonuses: { str: 0, dex: 2, cha: 0, int: 1, hp: 0 },
+    bonuses: { str: 0, dex: 2, con: 0, int: 1, wis: 0, cha: 0 },
     features: "You cannot be magically put to sleep. Advantage on saves against charm. Four hours of trance counts as a full rest."
   },
   dwarf: {
     id: "dwarf",
     name: "Dwarf",
-    blurb: "Stout underground builders. Poison resistance, Darkvision, stonecunning.",
+    blurb: "Stout underground builders. +2 Constitution, +1 Strength. Poison resistance, Darkvision, stonecunning.",
     traits: ["Darkvision", "Poison Resistance", "Stonecunning", "Axe & Hammer Training"],
-    bonuses: { str: 2, dex: 0, cha: 0, int: 0, hp: 3 },
+    bonuses: { str: 1, dex: 0, con: 2, int: 0, wis: 0, cha: 0 },
     features: "Resistance to poison. You notice unusual stonework automatically. Warhammers and battleaxes feel like heirlooms in your hands."
   },
   dragonborn: {
     id: "dragonborn",
     name: "Dragonborn",
-    blurb: "Proud draconic humanoids. A breath weapon and matching damage resistance.",
+    blurb: "Proud draconic humanoids. +2 Strength, +1 Charisma. Breath weapon and matching resistance.",
     traits: ["Breath Weapon", "Draconic Resistance"],
-    bonuses: { str: 2, dex: 0, cha: 1, int: 0, hp: 1 },
+    bonuses: { str: 2, dex: 0, con: 0, int: 0, wis: 0, cha: 1 },
     features: "Once per combat you exhale elemental ruin in a short cone. You resist the same element as your breath."
   },
   tiefling: {
     id: "tiefling",
     name: "Tiefling",
-    blurb: "Infernal heritage. Fire resistance, Darkvision, innate hellish spellcasting.",
+    blurb: "Infernal heritage. +2 Charisma, +1 Intelligence. Fire resistance, Darkvision, hellish magic.",
     traits: ["Darkvision", "Fire Resistance", "Infernal Legacy"],
-    bonuses: { str: 0, dex: 0, cha: 2, int: 1, hp: 0 },
+    bonuses: { str: 0, dex: 0, con: 0, int: 1, wis: 0, cha: 2 },
     features: "You resist fire. Once per rest you may wreath a strike or retort in hellish flame."
   }
 };
@@ -44,8 +50,8 @@ const RACES = {
 const CLASSES = {
   fighter: {
     id: "fighter", name: "Fighter",
-    primary: "str",
-    hp: 12,
+    primary: "str", secondary: "con",
+    hitDie: 10,
     features: ["Second Wind", "Martial Adept"],
     attack: "str",
     damage: "1d8+STR",
@@ -53,8 +59,8 @@ const CLASSES = {
   },
   wizard: {
     id: "wizard", name: "Wizard",
-    primary: "int",
-    hp: 6,
+    primary: "int", secondary: "con",
+    hitDie: 6,
     features: ["Arcane Recovery", "Cantrip: Force Bolt"],
     attack: "int",
     damage: "1d10+INT",
@@ -62,8 +68,8 @@ const CLASSES = {
   },
   rogue: {
     id: "rogue", name: "Rogue",
-    primary: "dex",
-    hp: 8,
+    primary: "dex", secondary: "int",
+    hitDie: 8,
     features: ["Sneak Attack", "Cunning Action"],
     attack: "dex",
     damage: "1d6+DEX",
@@ -71,22 +77,30 @@ const CLASSES = {
   },
   cleric: {
     id: "cleric", name: "Cleric",
-    primary: "cha",
-    hp: 8,
+    primary: "wis", secondary: "con",
+    hitDie: 8,
     features: ["Turn the Unholy", "Healing Word"],
-    attack: "cha",
-    damage: "1d8+CHA",
+    attack: "wis",
+    damage: "1d8+WIS",
     blurb: "A voice older than kings still answers when you pray."
   },
   ranger: {
     id: "ranger", name: "Ranger",
-    primary: "dex",
-    hp: 10,
+    primary: "dex", secondary: "wis",
+    hitDie: 10,
     features: ["Hunter's Mark", "Wilderness Stride"],
     attack: "dex",
     damage: "1d8+DEX",
     blurb: "Roads end. The trail does not."
   }
+};
+
+const CLASS_ARRAY = {
+  fighter: { str: 15, con: 14, dex: 13, wis: 12, cha: 10, int: 8 },
+  wizard: { int: 15, con: 14, dex: 13, wis: 12, cha: 10, str: 8 },
+  rogue: { dex: 15, con: 14, wis: 13, cha: 12, int: 10, str: 8 },
+  cleric: { wis: 15, con: 14, cha: 13, str: 12, dex: 10, int: 8 },
+  ranger: { dex: 15, con: 14, wis: 13, str: 12, int: 10, cha: 8 }
 };
 
 const WORLD_Q = [
@@ -243,3 +257,12 @@ const TREASURE = [
   "a charm against drowning, or drowning-adjacent fates",
   "a letter addressed to you, dated last year, in a hand you do not know"
 ];
+
+const LLM_PROVIDERS = {
+  off: { label: "Built-in Dungeon Master", endpoint: "", model: "" },
+  openai: { label: "OpenAI", endpoint: "https://api.openai.com/v1/chat/completions", model: "gpt-4o-mini" },
+  xai: { label: "xAI Grok", endpoint: "https://api.x.ai/v1/chat/completions", model: "grok-3" },
+  openrouter: { label: "OpenRouter", endpoint: "https://openrouter.ai/api/v1/chat/completions", model: "openai/gpt-4o-mini" },
+  anthropic: { label: "Anthropic Claude", endpoint: "https://api.anthropic.com/v1/messages", model: "claude-sonnet-4-20250514" },
+  custom: { label: "Custom OpenAI-compatible", endpoint: "", model: "" }
+};
