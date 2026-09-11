@@ -116,7 +116,14 @@ function advanceQuest(state, reason) {
   if (q.stage < q.stages.length - 1) {
     q.stage += 1;
     state.world.act = Math.min(5, q.stage + 1);
-    return `The tale leans forward. New charge: ${q.stages[q.stage]}. (${reason})`;
+    const w = state.world;
+    const transitions = [
+      `The first loose thread becomes a trail: whatever is haunting ${w.town}, it bends toward ${w.relic}.`,
+      `The clue has teeth now. It points beyond rumor and into the hands of someone powerful enough to help — or betray you.`,
+      `An ally's shadow falls across the road ahead, and beyond it waits the enemy threshold.`,
+      `The outer mystery is gone. Only the heart of ${w.threatName} remains, and the way to reach it is no longer hidden.`
+    ];
+    return transitions[Math.min(q.stage - 1, transitions.length - 1)];
   }
   state.world.flags.won = true;
   return `The ${state.world.threatName} breaks. The ${state.world.name} will argue for a generation about who did it, but the sky is ordinary again.`;

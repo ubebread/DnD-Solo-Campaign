@@ -55,6 +55,7 @@ function previewStats() {
 }
 
 function render() {
+  document.body.classList.toggle("play-mode", ui.view === "play");
   if (ui.view === "splash") return splash();
   if (ui.view === "world") return worldView();
   if (ui.view === "hero") return heroView();
@@ -276,7 +277,7 @@ function heroView() {
         <p class="muted" style="margin:8px 0 18px">Five lineages, or a custom bloodline. Health is hit die + Constitution modifier.</p>
         <div class="grid two">
           <div class="card">
-            <label class="field"><span>Name</span><input id="nm" value="${esc(d.name)}" placeholder="A name the songs can carry" /></label>
+            <label class="field"><span>Name</span><input id="nm" type="text" value="${esc(d.name)}" placeholder="A name the songs can carry" /></label>
             <label class="field"><span>Class</span>
               <select id="cls">${Object.values(CLASSES).map((c) => `<option value="${c.id}" ${d.classId === c.id ? "selected" : ""}>${c.name} — ${c.blurb}</option>`).join("")}</select>
             </label>
